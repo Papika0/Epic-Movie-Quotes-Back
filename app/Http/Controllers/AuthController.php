@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
@@ -11,8 +10,6 @@ use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
-	use HttpResponses;
-
 	public function register(RegisterRequest $request): JsonResponse
 	{
 		$user = User::create([

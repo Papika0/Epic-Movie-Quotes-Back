@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\SendPasswordResetLinkRequest;
+use Illuminate\Http\JsonResponse;
 
 class ResetPasswordController extends Controller
 {
-	public function sendResetLink(SendPasswordResetLinkRequest $request)
+	public function sendResetLink(SendPasswordResetLinkRequest $request): JsonResponse
 	{
 		$status = Password::sendResetLink(
 			$request->validated()
@@ -22,7 +23,7 @@ class ResetPasswordController extends Controller
 		: response()->json('Email hasnt verified successfully !', 400);
 	}
 
-	public function reset(PasswordResetRequest $request)
+	public function reset(PasswordResetRequest $request): JsonResponse
 	{
 		$status = Password::reset(
 			$request->validated(),
