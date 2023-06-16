@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResendEmailRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Verified;
@@ -15,7 +16,7 @@ class EmailVerificationController extends Controller
 
 		if (!hash_equals((string) $user->getKey(), (string) $request->id) ||
 			!hash_equals(sha1($user->getEmailForVerification()), (string) $request->hash)) {
-			abort(403);
+			return response()->json(['message' => 'Email verification failed !', 'email' => $user->getEmailForVerification()], 401);
 		}
 
 		if (!$user->hasVerifiedEmail()) {
@@ -24,5 +25,18 @@ class EmailVerificationController extends Controller
 		}
 
 		return response()->json('Email verified successfully !');
+	}
+
+	public function resend(ResendEmailRequest $request): JsonResponse
+	{
+		$user = User::where('email', $request->email)->firstOrFail();
+
+		if ($user->hasVerifiedEmail()) {
+			return response()->json('Email already verified!', 200);
+		}
+
+		$user->sendEmailVerificationNotification();
+
+		return response()->json('Email verification link resent!', 200);
 	}
 }
