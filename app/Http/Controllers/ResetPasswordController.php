@@ -19,7 +19,8 @@ class ResetPasswordController extends Controller
 		);
 
 		return $status === Password::RESET_LINK_SENT
-		? response()->json('Email was sent successfully !', 200)
+		? response()->json(['message' => 'Email was sent successfully !',
+			'email'                      => $request->email], 200)
 		: response()->json('Email hasnt verified successfully !', 400);
 	}
 
