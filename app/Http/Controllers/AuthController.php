@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Auth\Events\Registered;
@@ -18,22 +20,45 @@ class AuthController extends Controller
 			'password' => Hash::make($request->password),
 		]);
 
-		$token = $user->createToken('auth_token')->plainTextToken;
-
 		event(new Registered($user));
 
 		return response()->json([
-			'user'		       => $user,
 			'status'       => true,
-			'access_token' => $token,
-		]);
+		], 201);
 	}
 
-	public function login()
+	public function login(LoginRequest $request): JsonResponse
 	{
+		$credentials = $request->only(['password']);
+		$username = $request->email;
+
+		if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+			$credentials['email'] = $username;
+		} else {
+			$credentials['username'] = $username;
+		}
+
+		$user = User::where('email', $username)
+			->orWhere('username', $username)
+			->first();
+
+		if (!Auth::attempt($credentials, $request->has('remember'))) {
+			return response()->json([
+				'message' => 'Invalid credentials',
+			], 401);
+		}
+
+		if (!$user->hasVerifiedEmail()) {
+			return response()->json([
+				'email'		       => $user->email,
+				'message'       => 'Email not verified',
+			], 403);
+		}
+
+		$request->session()->regenerate();
+
 		return response()->json([
-			'status' => true,
-			'data'   => 'this is login',
-		]);
+			'status'       => true,
+		], 200);
 	}
 }
