@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller
 {
-	public function redirectToGoogle()
+	public function redirectToGoogle(): JsonResponse
 	{
 		$url = Socialite::driver('google')->redirect()->getTargetUrl();
 		return response()->json([
@@ -17,7 +18,7 @@ class GoogleAuthController extends Controller
 		]);
 	}
 
-	public function handleGoogleCallback()
+	public function handleGoogleCallback(): JsonResponse
 	{
 		try {
 			$google_user = Socialite::driver('google')->user();
