@@ -11,9 +11,9 @@ Route::controller(AuthController::class)->group(function () {
 	Route::post('/login', 'login');
 });
 
-Route::controller(EmailVerificationController::class)->group(function () {
-	Route::get('/email/verify/{id}/{hash}', 'verify')->middleware(['signed'])->name('verification.verify');
-	Route::post('/email/verify/resend', 'resend')->name('verification.resend');
+Route::controller(EmailVerificationController::class)->prefix('/email/verify')->group(function () {
+	Route::get('/{id}/{hash}', 'verify')->middleware(['signed'])->name('verification.verify');
+	Route::post('/resend', 'resend')->name('verification.resend');
 });
 
 Route::prefix('reset-password')->controller(ResetPasswordController::class)->group(function () {
@@ -21,9 +21,9 @@ Route::prefix('reset-password')->controller(ResetPasswordController::class)->gro
 	Route::post('/{token}', 'reset')->name('password.reset');
 });
 
-Route::controller(GoogleAuthController::class)->group(function () {
-	Route::get('/auth/google', 'redirectToGoogle')->name('google.redirect')->middleware('web');
-	Route::get('/auth/google/call-back', 'handleGoogleCallback')->name('google.callback')->middleware('web');
+Route::controller(GoogleAuthController::class)->prefix('/auth/google')->group(function () {
+	Route::get('/', 'redirectToGoogle')->name('google.redirect')->middleware('web');
+	Route::get('/call-back', 'handleGoogleCallback')->name('google.callback')->middleware('web');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
