@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -24,6 +25,7 @@ class AuthController extends Controller
 
 		return response()->json([
 			'status'       => true,
+			'email'        => $user->email,
 		], 201);
 	}
 
@@ -60,5 +62,23 @@ class AuthController extends Controller
 		return response()->json([
 			'status'       => true,
 		], 200);
+	}
+
+	public function user(): JsonResponse
+	{
+		return response()->json([
+			'status'       => true,
+			'user'         => Auth::user(),
+		], 200);
+	}
+
+	public function logout(): JsonResponse
+	{
+		Auth::guard('web')->logout();
+		Session::flush();
+		return response()->json([
+			'status'  => true,
+			'message' => 'Logout success',
+		]);
 	}
 }
