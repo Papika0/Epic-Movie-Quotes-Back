@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\auth;
 
-use App\Http\Requests\ResendEmailRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
+use App\Http\Requests\ResendEmailRequest;
 use App\Http\Requests\VerifyEmailRequest;
 
 class EmailVerificationController extends Controller

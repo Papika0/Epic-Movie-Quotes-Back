@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\auth;
 
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleAuthController extends Controller

@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\GoogleAuthController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\auth\AuthController;
+use App\Http\Controllers\profile\ProfileController;
+use App\Http\Controllers\auth\GoogleAuthController;
+use App\Http\Controllers\auth\ResetPasswordController;
+use App\Http\Controllers\auth\EmailVerificationController;
 
 Route::controller(AuthController::class)->group(function () {
 	Route::post('/register', 'register');
