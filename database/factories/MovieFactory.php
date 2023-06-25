@@ -32,7 +32,8 @@ class MovieFactory extends Factory
 				'en' => fake()->name(),
 				'ka' => $fakerKa->realText(25),
 			],
-			'description' => [
+			'release_year' => $this->faker->year(),
+			'description'  => [
 				'en' => fake()->name(),
 				'ka' => $fakerKa->realText(40),
 			],

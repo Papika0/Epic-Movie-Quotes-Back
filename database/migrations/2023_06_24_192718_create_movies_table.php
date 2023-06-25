@@ -16,6 +16,7 @@ return new class extends Migration {
 			$table->json('name');
 			$table->json('director');
 			$table->json('description');
+			$table->string('release_year');
 			$table->string('thumbnail');
 			$table->timestamps();
 		});
