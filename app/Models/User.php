@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\CanResetPassword;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -16,6 +16,26 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 	use HasFactory;
 
 	use Notifiable;
+
+	public function movies()
+	{
+		return $this->hasMany(Movie::class);
+	}
+
+	public function quotes()
+	{
+		return $this->hasMany(Quote::class);
+	}
+
+	public function likes()
+	{
+		return $this->belongsToMany(Quote::class, 'likes');
+	}
+
+	public function comments()
+	{
+		return $this->hasMany(Comment::class);
+	}
 
 	/**
 	 * The attributes that are mass assignable.
