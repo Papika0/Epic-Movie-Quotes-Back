@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GoogleAuthController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\auth\AuthController;
+use App\Http\Controllers\profile\ProfileController;
+use App\Http\Controllers\auth\GoogleAuthController;
+use App\Http\Controllers\auth\ResetPasswordController;
+use App\Http\Controllers\auth\EmailVerificationController;
 
 Route::controller(AuthController::class)->group(function () {
 	Route::post('/register', 'register');
@@ -30,5 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::controller(AuthController::class)->group(function () {
 		Route::post('/logout', 'logout')->middleware('web')->name('logout');
 		Route::get('/user', 'user')->middleware('web')->name('user');
+	});
+
+	Route::prefix('profile')->controller(ProfileController::class)->group(function () {
+		Route::post('/update-profile', 'updateProfile')->middleware('web')->name('profile.change_email');
+		Route::post('/upload-thumbnail', 'uploadThumbnail')->middleware('web')->name('profile.upload_thumbnail');
 	});
 });
