@@ -45,9 +45,10 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::prefix('movies')->controller(MovieController::class)->group(function () {
 		Route::get('/', 'getMovies')->middleware('web')->name('movies');
 		Route::get('/{movie}', 'getMovie')->middleware('web')->name('movies.get');
+		Route::get('/{movie}/edit', 'editMovie')->middleware('web')->name('movies.edit');
 		Route::post('/create', 'createMovie')->middleware('web')->name('movies.create');
 		Route::post('/{movie}/update', 'updateMovie')->middleware('web')->name('movies.update');
-		Route::post('/{movie}/delete', 'deleteMovie')->middleware('web')->name('movies.delete');
+		Route::delete('/{movie}/delete', 'deleteMovie')->middleware('web')->name('movies.delete');
 	});
 
 	Route::get('/genres', [MovieController::class, 'getGenres'])->middleware('web')->name('movies.genres');
