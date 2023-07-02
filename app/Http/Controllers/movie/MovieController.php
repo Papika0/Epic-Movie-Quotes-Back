@@ -17,7 +17,7 @@ class MovieController extends Controller
 {
 	public function getMovies()
 	{
-		return response()->json(new MovieCollection(auth()->user()->movies));
+		return response()->json(new MovieCollection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
 	public function getGenres()

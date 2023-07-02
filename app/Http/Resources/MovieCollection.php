@@ -14,7 +14,7 @@ class MovieCollection extends ResourceCollection
 	 */
 	public function toArray(Request $request): array
 	{
-		return $this->collection->sortByDesc('created_at')->map(function ($movie) {
+		return $this->collection->map(function ($movie) {
 			return [
 				'id'           => $movie->id,
 				'name'         => $movie->name,
