@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::get('/genres', [MovieController::class, 'getGenres'])->middleware('web')->name('movies.genres');
 
 	Route::prefix('quotes')->controller(QuoteController::class)->group(function () {
-		Route::get('/', 'getQuotes')->middleware('web')->name('quotes');
+		Route::get('/{page}/get-quotes', 'getQuotes')->middleware('web')->name('quotes');
 		Route::get('/{quote}', 'getQuote')->middleware('web')->name('quotes.get');
 		Route::post('/create', 'createQuote')->middleware('web')->name('quotes.create');
 		Route::post('/{quote}/update', 'updateQuote')->middleware('web')->name('quotes.update');

@@ -10,6 +10,7 @@ use App\Http\Requests\EditQuoteRequest;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AddCommentRequest;
+use App\Http\Resources\QuotesNewsFeedResource;
 
 class QuoteController extends Controller
 {
@@ -69,5 +70,11 @@ class QuoteController extends Controller
 		]);
 
 		return response()->json(new CommentResource($comment));
+	}
+
+	public function getQuotes($page)
+	{
+		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
+		return response()->json(QuotesNewsFeedResource::collection($quotes));
 	}
 }
