@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\AuthController;
+use App\Http\Controllers\like\LikeController;
 use App\Http\Controllers\movie\MovieController;
 use App\Http\Controllers\quote\QuoteController;
 use App\Http\Controllers\LocalizationController;
@@ -55,11 +56,16 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::get('/genres', [MovieController::class, 'getGenres'])->middleware('web')->name('movies.genres');
 
 	Route::prefix('quotes')->controller(QuoteController::class)->group(function () {
-		Route::get('/', 'getQuotes')->middleware('web')->name('quotes');
+		Route::get('/{page}/get-quotes', 'getQuotes')->middleware('web')->name('quotes');
 		Route::get('/{quote}', 'getQuote')->middleware('web')->name('quotes.get');
 		Route::post('/create', 'createQuote')->middleware('web')->name('quotes.create');
 		Route::post('/{quote}/update', 'updateQuote')->middleware('web')->name('quotes.update');
 		Route::delete('/{quote}/delete', 'deleteQuote')->middleware('web')->name('quotes.delete');
 		Route::post('/{quote}/create-comment', 'createComment')->middleware('web')->name('quotes.create_comment');
+
+		Route::controller(LikeController::class)->group(function () {
+			Route::post('/{quote}/like', 'like')->middleware('web')->name('quotes.like');
+			Route::post('/{quote}/unlike', 'unlike')->middleware('web')->name('quotes.unlike');
+		});
 	});
 });

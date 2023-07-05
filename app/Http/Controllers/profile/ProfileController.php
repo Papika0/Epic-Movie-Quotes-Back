@@ -47,14 +47,14 @@ class ProfileController extends Controller
 			if ($user->thumbnail != null) {
 				Storage::disk('public')->delete($user->thumbnail);
 			}
-			$thumbnail = $request->file('thumbnail');
-			$filename = $thumbnail->store('thumbnails', 'public');
-			$user->thumbnail = $filename;
+			$thumbnailPath = $request->thumbnail->store('thumbnails', 'public');
+			$user->thumbnail = '/storage/' . $thumbnailPath;
 			$user->save();
 		}
 
 		return response()->json([
 			'message' => 'Thumbnail uploaded successfully',
+			'user'    => $user,
 		]);
 	}
 }

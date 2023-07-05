@@ -20,6 +20,7 @@ class QuoteCollection extends ResourceCollection
 				'content'         => $quote->content,
 				'thumbnail'       => $quote->thumbnail,
 				'likes_count'     => $quote->likes()->count(),
+				'liked_by_user'   => $quote->likes()->where('user_id', auth()->user()->id)->exists(),
 				'comments_count'  => $quote->comments()->count(),
 			];
 		})->all();
