@@ -24,6 +24,7 @@ class QuoteResource extends JsonResource
 			'liked_by_user'      => $this->likes()->where('user_id', auth()->user()->id)->exists(),
 			'comments_count'     => $this->comments()->count(),
 			'comments'           => CommentResource::collection($this->comments),
+			'user_id'            => $this->user_id,
 		];
 	}
 }

@@ -19,7 +19,6 @@ class QuotesNewsFeedResource extends JsonResource
 			'movie_name'         => $this->movie->name,
 			'movie_release_date' => $this->movie->release_year,
 			'likes_count'        => $this->likes()->count(),
-			'comments_count'     => $this->comments()->count(),
 		];
 	}
 }
