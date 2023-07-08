@@ -10,6 +10,7 @@ use App\Http\Controllers\auth\GoogleAuthController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\auth\EmailVerificationController;
+use App\Http\Controllers\notification\NotificationController;
 
 Route::get('/set-locale/{locale}', [LocalizationController::class, 'setLanguage'])->name('set.locale')->middleware('web');
 
@@ -67,5 +68,11 @@ Route::middleware('auth:sanctum')->group(function () {
 			Route::post('/{quote}/like', 'like')->middleware('web')->name('quotes.like');
 			Route::post('/{quote}/unlike', 'unlike')->middleware('web')->name('quotes.unlike');
 		});
+	});
+
+	Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
+		Route::get('/{page}', 'getNotifications')->middleware('web')->name('notifications.get');
+		Route::post('/{id}/mark-as-read', 'markAsRead')->middleware('web')->name('notifications.mark_as_read');
+		Route::post('/mark-all-as-read', 'markAllAsRead')->middleware('web')->name('notifications.mark_all_as_read');
 	});
 });
