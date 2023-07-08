@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\quote;
 
 use App\Models\Quote;
+use App\Events\CommentAdded;
+use App\Models\Notifications;
+use App\Events\NotificationSend;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuoteResource;
 use App\Http\Requests\AddQuoteRequest;
@@ -10,6 +13,7 @@ use App\Http\Requests\EditQuoteRequest;
 use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AddCommentRequest;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\QuotesNewsFeedResource;
 
 class QuoteController extends Controller
@@ -69,12 +73,30 @@ class QuoteController extends Controller
 			'quote_id' => $quote->id,
 		]);
 
+		event(new CommentAdded(
+			new CommentResource($comment)
+		));
+
+		$notification = Notifications::create([
+			'to'       => $quote->user->id,
+			'from'     => auth()->user()->id,
+			'quote_id' => $quote->id,
+			'type'     => 'comment',
+			'read'     => 0,
+		]);
+
+		event(new NotificationSend(new NotificationResource($notification)));
+
 		return response()->json(new CommentResource($comment));
 	}
 
 	public function getQuotes($page)
 	{
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
-		return response()->json(QuotesNewsFeedResource::collection($quotes));
+		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
+		return response()->json([
+			'data'            => QuotesNewsFeedResource::collection($quotes),
+			'remaining_pages' => $remainingPages,
+		]);
 	}
 }
