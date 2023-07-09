@@ -37,6 +37,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 		return $this->hasMany(Comment::class);
 	}
 
+	public function notifications()
+	{
+		return $this->hasMany(Notifications::class, 'to');
+	}
+
 	/**
 	 * The attributes that are mass assignable.
 	 *

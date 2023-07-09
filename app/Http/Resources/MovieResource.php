@@ -24,6 +24,7 @@ class MovieResource extends JsonResource
 			'quotes_count' => $this->quotes()->count(),
 			'quotes'       => new QuoteCollection($this->quotes->sortByDesc('created_at')),
 			'genres'       => GenreResource::collection($this->genres),
+			'user_id'      => $this->user_id,
 		];
 	}
 }
