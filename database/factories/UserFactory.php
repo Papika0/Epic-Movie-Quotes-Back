@@ -21,19 +21,22 @@ class UserFactory extends Factory
 		if (!Storage::disk('public')->exists('thumbnails')) {
 			Storage::disk('public')->makeDirectory('thumbnails');
 		}
+		$username = fake()->unique()->userName();
+
 		return [
-			'username'          => fake()->unique()->userName(),
+			'username'          => $username,
 			'email'             => fake()->unique()->safeEmail(),
 			'email_verified_at' => now(),
 			'password'          => 'password', // password
 			'remember_token'    => Str::random(10),
-			'thumbnail'         => $this->generateThumbnail(),
+			'thumbnail'         => $this->generateThumbnail($username),
 		];
 	}
 
-	private function generateThumbnail(): string
+	private function generateThumbnail($username): string
 	{
-		$thumbnail = $this->faker->image('public/storage/thumbnails', 640, 480, null, false);
+		$firstName = strtoupper(substr($username, 0, 1));
+		$thumbnail = $this->faker->image('public/storage/thumbnails', 180, 180, null, false, false, $firstName);
 
 		return '/storage/thumbnails/' . pathinfo($thumbnail, PATHINFO_BASENAME);
 	}

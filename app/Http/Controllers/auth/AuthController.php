@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\auth;
 
 use App\Models\User;
+use Faker\Factory as Faker;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
@@ -23,6 +24,12 @@ class AuthController extends Controller
 		]);
 
 		event(new Registered($user));
+
+		$faker = Faker::create();
+		$firstName = strtoupper(substr($user->username, 0, 1));
+		$thumbnail = $faker->image(public_path('storage/thumbnails'), 180, 180, null, false, false, $firstName);
+		$user->thumbnail = '/storage/thumbnails/' . pathinfo($thumbnail, PATHINFO_BASENAME);
+		$user->save();
 
 		return response()->json([
 			'status'       => true,
