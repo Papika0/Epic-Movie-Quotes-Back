@@ -54,14 +54,14 @@ class AuthController extends Controller
 
 		if (!Auth::attempt($credentials, $request->has('remember'))) {
 			return response()->json([
-				'message' => 'Invalid credentials',
+				'message' => __('auth.failed'),
 			], 401);
 		}
 
 		if (!$user->hasVerifiedEmail()) {
 			return response()->json([
 				'email'		       => $user->email,
-				'message'       => 'Email not verified',
+				'message'       => __('auth.not_verified'),
 			], 403);
 		}
 
