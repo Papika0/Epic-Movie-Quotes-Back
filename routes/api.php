@@ -12,7 +12,7 @@ use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\auth\EmailVerificationController;
 use App\Http\Controllers\notification\NotificationController;
 
-Route::get('/set-locale/{locale}', [LocalizationController::class, 'setLanguage'])->name('set.locale')->middleware('web');
+Route::get('/set-locale/{locale}', [LocalizationController::class, 'setLanguage'])->name('set.locale');
 
 Route::controller(AuthController::class)->group(function () {
 	Route::post('/register', 'register');
