@@ -30,49 +30,55 @@ Route::prefix('reset-password')->controller(ResetPasswordController::class)->gro
 });
 
 Route::controller(GoogleAuthController::class)->prefix('/auth/google')->group(function () {
-	Route::get('/', 'redirectToGoogle')->name('google.redirect')->middleware('web');
-	Route::get('/call-back', 'handleGoogleCallback')->name('google.callback')->middleware('web');
+	Route::get('/', 'redirectToGoogle')->name('google.redirect');
+	Route::get('/call-back', 'handleGoogleCallback')->name('google.callback');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
 	Route::controller(AuthController::class)->group(function () {
-		Route::post('/logout', 'logout')->middleware('web')->name('logout');
-		Route::get('/user', 'user')->middleware('web')->name('user');
+		Route::post('/logout', 'logout')->name('logout');
+		Route::get('/user', 'user')->name('user');
 	});
 
 	Route::prefix('profile')->controller(ProfileController::class)->group(function () {
-		Route::post('/update-profile', 'updateProfile')->middleware('web')->name('profile.change_email');
-		Route::post('/upload-thumbnail', 'uploadThumbnail')->middleware('web')->name('profile.upload_thumbnail');
+		Route::post('/update-profile', 'updateProfile')->name('profile.change_email');
+		Route::post('/upload-thumbnail', 'uploadThumbnail')->name('profile.upload_thumbnail');
 	});
 
 	Route::prefix('movies')->controller(MovieController::class)->group(function () {
-		Route::get('/', 'getMovies')->middleware('web')->name('movies');
-		Route::get('/{movie}', 'getMovie')->middleware('web')->name('movies.get');
-		Route::get('/{movie}/edit', 'editMovie')->middleware('web')->name('movies.edit');
-		Route::post('/create', 'createMovie')->middleware('web')->name('movies.create');
-		Route::post('/{movie}/update', 'updateMovie')->middleware('web')->name('movies.update');
-		Route::delete('/{movie}/delete', 'deleteMovie')->middleware('web')->name('movies.delete');
+		Route::prefix('{movie}')->group(function () {
+			Route::get('/', 'getMovie')->name('movies.get');
+			Route::get('/edit', 'editMovie')->name('movies.edit');
+			Route::post('/update', 'updateMovie')->name('movies.update');
+			Route::delete('/delete', 'deleteMovie')->name('movies.delete');
+		});
+
+		Route::get('/', 'getMovies')->name('movies');
+		Route::post('/create', 'createMovie')->name('movies.create');
 	});
 
-	Route::get('/genres', [MovieController::class, 'getGenres'])->middleware('web')->name('movies.genres');
+	Route::get('/genres', [MovieController::class, 'getGenres'])->name('movies.genres');
 
 	Route::prefix('quotes')->controller(QuoteController::class)->group(function () {
-		Route::get('/{page}/get-quotes', 'getQuotes')->middleware('web')->name('quotes');
-		Route::get('/{quote}', 'getQuote')->middleware('web')->name('quotes.get');
-		Route::post('/create', 'createQuote')->middleware('web')->name('quotes.create');
-		Route::post('/{quote}/update', 'updateQuote')->middleware('web')->name('quotes.update');
-		Route::delete('/{quote}/delete', 'deleteQuote')->middleware('web')->name('quotes.delete');
-		Route::post('/{quote}/create-comment', 'createComment')->middleware('web')->name('quotes.create_comment');
+		Route::prefix('{quote}')->group(function () {
+			Route::get('/', 'getQuote')->name('quotes.get');
+			Route::post('/update', 'updateQuote')->name('quotes.update');
+			Route::delete('/delete', 'deleteQuote')->name('quotes.delete');
+			Route::post('/create-comment', 'createComment')->name('quotes.create_comment');
 
-		Route::controller(LikeController::class)->group(function () {
-			Route::post('/{quote}/like', 'like')->middleware('web')->name('quotes.like');
-			Route::post('/{quote}/unlike', 'unlike')->middleware('web')->name('quotes.unlike');
+			Route::controller(LikeController::class)->group(function () {
+				Route::post('/like', 'like')->name('quotes.like');
+				Route::post('/unlike', 'unlike')->name('quotes.unlike');
+			});
 		});
+
+		Route::get('/{page}/get-quotes', 'getQuotes')->name('quotes');
+		Route::post('/create', 'createQuote')->name('quotes.create');
 	});
 
 	Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
-		Route::get('/{page}', 'getNotifications')->middleware('web')->name('notifications.get');
-		Route::post('/{id}/mark-as-read', 'markAsRead')->middleware('web')->name('notifications.mark_as_read');
-		Route::post('/mark-all-as-read', 'markAllAsRead')->middleware('web')->name('notifications.mark_all_as_read');
+		Route::get('/{page}', 'getNotifications')->name('notifications.get');
+		Route::post('/{id}/mark-as-read', 'markAsRead')->name('notifications.mark_as_read');
+		Route::post('/mark-all-as-read', 'markAllAsRead')->name('notifications.mark_all_as_read');
 	});
 });
