@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\notification;
 
 use App\Models\User;
-use App\Models\Notifications;
+use App\Models\Notification;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\NotificationResource;
 
@@ -28,7 +28,7 @@ class NotificationController extends Controller
 		);
 	}
 
-	public function markAsRead(Notifications $id)
+	public function markAsRead(Notification $id)
 	{
 		$id->update(['read' => 1]);
 		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($id)]);

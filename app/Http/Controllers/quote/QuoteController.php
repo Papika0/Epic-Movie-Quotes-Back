@@ -4,7 +4,7 @@ namespace App\Http\Controllers\quote;
 
 use App\Models\Quote;
 use App\Events\CommentAdded;
-use App\Models\Notifications;
+use App\Models\Notification;
 use App\Events\NotificationSend;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuoteResource;
@@ -77,7 +77,7 @@ class QuoteController extends Controller
 			new CommentResource($comment)
 		));
 
-		$notification = Notifications::create([
+		$notification = Notification::create([
 			'to'       => $quote->user->id,
 			'from'     => auth()->user()->id,
 			'quote_id' => $quote->id,

@@ -7,7 +7,7 @@ use App\Events\QuoteLiked;
 use App\Events\NotificationSend;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\NotificationResource;
-use App\Models\Notifications;
+use App\Models\Notification;
 
 class LikeController extends Controller
 {
@@ -22,7 +22,7 @@ class LikeController extends Controller
 			]
 		));
 
-		$notification = Notifications::create([
+		$notification = Notification::create([
 			'to'       => $quote->user->id,
 			'from'     => auth()->user()->id,
 			'quote_id' => $quote->id,
@@ -48,7 +48,7 @@ class LikeController extends Controller
 			]
 		));
 
-		Notifications::where('to', $quote->user->id)->where('from', auth()->user()->id)->where('type', 'like')->delete();
+		Notification::where('to', $quote->user->id)->where('from', auth()->user()->id)->where('type', 'like')->delete();
 
 		return response()->json([
 			'message'     => 'Quote unliked successfully',

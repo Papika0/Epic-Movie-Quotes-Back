@@ -22,9 +22,9 @@ class GoogleAuthController extends Controller
 	public function handleGoogleCallback(): JsonResponse
 	{
 		try {
-			$google_user = Socialite::driver('google')->user();
+			$googleUser = Socialite::driver('google')->user();
 
-			$user = User::where('google_id', $google_user->id)->first();
+			$user = User::where('google_id', $googleUser->id)->first();
 
 			if ($user) {
 				auth()->login($user, true);
@@ -34,11 +34,11 @@ class GoogleAuthController extends Controller
 				], 201);
 			} else {
 				$new_user = User::create([
-					'username'          => $google_user->GetName(),
-					'email'             => $google_user->getEmail(),
-					'google_id'         => $google_user->getId(),
+					'username'          => $googleUser->GetName(),
+					'email'             => $googleUser->getEmail(),
+					'google_id'         => $googleUser->getId(),
 					'email_verified_at' => Carbon::now()->toDateTimeString(),
-					'password'          => bcrypt($google_user->getId()),
+					'password'          => bcrypt($googleUser->getId()),
 				]);
 
 				auth()->login($new_user, true);
