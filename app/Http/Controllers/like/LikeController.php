@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\like;
 
-use App\Models\Quote;
-use App\Events\QuoteLiked;
 use App\Events\NotificationSend;
+use App\Events\QuoteLiked;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\NotificationResource;
+use App\Http\Resources\Notification\NotificationResource;
 use App\Models\Notification;
+use App\Models\Quote;
 use Illuminate\Http\JsonResponse;
 
 class LikeController extends Controller
