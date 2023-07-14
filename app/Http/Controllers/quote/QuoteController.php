@@ -14,17 +14,18 @@ use App\Http\Resources\QuoteResource;
 use App\Http\Resources\QuotesNewsFeedResource;
 use App\Models\Notification;
 use App\Models\Quote;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class QuoteController extends Controller
 {
-	public function getQuote(Quote $quote)
-	{
+	public function getQuote(Quote $quote): JsonResponse
+    {
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function updateQuote(Quote $quote, EditQuoteRequest $request)
-	{
+	public function updateQuote(Quote $quote, EditQuoteRequest $request): JsonResponse
+    {
 		$quote->update([
 			'content'    => [
 				'en' => $request->content_en,
@@ -41,15 +42,15 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function deleteQuote(Quote $quote)
-	{
+	public function deleteQuote(Quote $quote): JsonResponse
+    {
 		Storage::disk('public')->delete($quote->thumbnail);
 		$quote->delete();
 		return response()->json(['message' => 'Quote deleted successfully']);
 	}
 
-	public function createQuote(AddQuoteRequest $request)
-	{
+	public function createQuote(AddQuoteRequest $request): JsonResponse
+    {
 		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
 
 		$quote = Quote::create([
@@ -65,8 +66,8 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function createComment(Quote $quote, AddCommentRequest $request)
-	{
+	public function createComment(Quote $quote, AddCommentRequest $request): JsonResponse
+    {
 		$comment = $quote->comments()->create([
 			'user_id'  => auth()->id(),
 			'content'  => $request->content,
@@ -90,8 +91,8 @@ class QuoteController extends Controller
 		return response()->json(new CommentResource($comment));
 	}
 
-	public function getQuotes($page)
-	{
+	public function getQuotes($page): JsonResponse
+    {
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
 		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
 		return response()->json([

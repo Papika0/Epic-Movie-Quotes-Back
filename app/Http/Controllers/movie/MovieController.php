@@ -11,27 +11,28 @@ use App\Http\Resources\MovieEditResource;
 use App\Http\Resources\MovieResource;
 use App\Models\Genre;
 use App\Models\Movie;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-	public function getMovies()
-	{
+	public function getMovies(): JsonResponse
+    {
 		return response()->json(new MovieCollection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
-	public function getGenres()
-	{
+	public function getGenres(): JsonResponse
+    {
 		return response()->json(new GenreCollection(Genre::all()));
 	}
 
-	public function getMovie(Movie $movie)
-	{
+	public function getMovie(Movie $movie): JsonResponse
+    {
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function createMovie(CreateMovieRequest $request)
-	{
+	public function createMovie(CreateMovieRequest $request): JsonResponse
+    {
 		$thumbnailPath = $request->thumbnail->store('movies', 'public');
 
 		$movie = Movie::create([
@@ -58,13 +59,13 @@ class MovieController extends Controller
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function editMovie(Movie $movie)
-	{
+	public function editMovie(Movie $movie): JsonResponse
+    {
 		return response()->json(new MovieEditResource($movie));
 	}
 
-	public function updateMovie(Movie $movie, EditMovieRequest $request)
-	{
+	public function updateMovie(Movie $movie, EditMovieRequest $request): JsonResponse
+    {
 		$movie->update([
 			'name'    => [
 				'en' => $request->name_en,
@@ -93,8 +94,8 @@ class MovieController extends Controller
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function deleteMovie(Movie $movie)
-	{
+	public function deleteMovie(Movie $movie): JsonResponse
+    {
 		$movie->delete();
 
 		return response()->json(['message' => 'Movie deleted successfully']);
