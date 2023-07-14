@@ -53,7 +53,7 @@ class MovieController extends Controller
 			'thumbnail'    => '/storage/' . $thumbnailPath,
 		]);
 
-		$genreIds = explode(',', $request->input('genre_ids'));
+		$genreIds = explode(',', $request->genre_ids);
 		$movie->genres()->attach($genreIds);
 
 		return response()->json(new MovieResource($movie));
