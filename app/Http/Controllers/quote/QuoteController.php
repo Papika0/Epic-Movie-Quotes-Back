@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\quote;
 
-use App\Models\Quote;
 use App\Events\CommentAdded;
-use App\Models\Notification;
 use App\Events\NotificationSend;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\QuoteResource;
-use App\Http\Requests\AddQuoteRequest;
-use App\Http\Requests\EditQuoteRequest;
-use App\Http\Resources\CommentResource;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AddCommentRequest;
+use App\Http\Requests\Quote\AddQuoteRequest;
+use App\Http\Requests\Quote\EditQuoteRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\QuoteResource;
 use App\Http\Resources\QuotesNewsFeedResource;
+use App\Models\Notification;
+use App\Models\Quote;
+use Illuminate\Support\Facades\Storage;
 
 class QuoteController extends Controller
 {

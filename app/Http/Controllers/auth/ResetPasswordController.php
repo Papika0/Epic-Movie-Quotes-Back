@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\auth;
 
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Auth\PasswordResetRequest;
+use App\Http\Requests\Auth\SendPasswordResetLinkRequest;
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use App\Http\Requests\PasswordResetRequest;
-use App\Http\Requests\SendPasswordResetLinkRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {

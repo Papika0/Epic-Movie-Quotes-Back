@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\auth;
 
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ResendEmailRequest;
+use App\Http\Requests\Auth\VerifyEmailRequest;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
-use App\Http\Requests\ResendEmailRequest;
-use App\Http\Requests\VerifyEmailRequest;
+use Illuminate\Http\JsonResponse;
 
 class EmailVerificationController extends Controller
 {

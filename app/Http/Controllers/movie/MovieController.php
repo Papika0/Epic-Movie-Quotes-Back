@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\movie;
 
-use App\Models\Genre;
-use App\Models\Movie;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MovieResource;
-use App\Http\Requests\EditMovieRequest;
+use App\Http\Requests\Movie\CreateMovieRequest;
+use App\Http\Requests\Movie\EditMovieRequest;
 use App\Http\Resources\GenreCollection;
 use App\Http\Resources\MovieCollection;
-use App\Http\Requests\CreateMovieRequest;
 use App\Http\Resources\MovieEditResource;
+use App\Http\Resources\MovieResource;
+use App\Models\Genre;
+use App\Models\Movie;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
