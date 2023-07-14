@@ -4,6 +4,7 @@ namespace App\Http\Controllers\auth;
 
 use Carbon\Carbon;
 use App\Models\User;
+use Faker\Factory as Faker;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
@@ -33,7 +34,7 @@ class GoogleAuthController extends Controller
 					'message' => 'Login success',
 				], 201);
 			} else {
-				$new_user = User::create([
+				$newUser = User::create([
 					'username'          => $googleUser->GetName(),
 					'email'             => $googleUser->getEmail(),
 					'google_id'         => $googleUser->getId(),
@@ -41,7 +42,13 @@ class GoogleAuthController extends Controller
 					'password'          => bcrypt($googleUser->getId()),
 				]);
 
-				auth()->login($new_user, true);
+				$faker = Faker::create();
+				$firstName = strtoupper(substr($googleUser->GetName(), 0, 1));
+				$thumbnail = $faker->image(public_path('storage/thumbnails'), 180, 180, null, false, false, $firstName);
+				$newUser->thumbnail = '/storage/thumbnails/' . pathinfo($thumbnail, PATHINFO_BASENAME);
+				$newUser->save();
+
+				auth()->login($newUser, true);
 				return response()->json([
 					'status'  => 'success',
 					'message' => 'Register success',
