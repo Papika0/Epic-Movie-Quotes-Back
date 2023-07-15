@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\CreateMovieRequest;
 use App\Http\Requests\Movie\EditMovieRequest;
 use App\Http\Resources\Genre\GenreCollection;
-use App\Http\Resources\Movie\MovieCollection;
+use App\Http\Resources\Movie\MoviesResource;
 use App\Http\Resources\Movie\MovieEditResource;
 use App\Http\Resources\Movie\MovieResource;
 use App\Models\Genre;
@@ -17,22 +17,22 @@ use Illuminate\Support\Facades\Storage;
 class MovieController extends Controller
 {
 	public function getMovies(): JsonResponse
-    {
-		return response()->json(new MovieCollection(auth()->user()->movies->sortByDesc('created_at')));
+	{
+		return response()->json(MoviesResource::collection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
 	public function getGenres(): JsonResponse
-    {
+	{
 		return response()->json(new GenreCollection(Genre::all()));
 	}
 
 	public function getMovie(Movie $movie): JsonResponse
-    {
+	{
 		return response()->json(new MovieResource($movie));
 	}
 
 	public function createMovie(CreateMovieRequest $request): JsonResponse
-    {
+	{
 		$thumbnailPath = $request->thumbnail->store('movies', 'public');
 
 		$movie = Movie::create([
@@ -56,16 +56,16 @@ class MovieController extends Controller
 		$genreIds = explode(',', $request->genre_ids);
 		$movie->genres()->attach($genreIds);
 
-		return response()->json(new MovieResource($movie));
+		return response()->json(new MoviesResource($movie));
 	}
 
 	public function editMovie(Movie $movie): JsonResponse
-    {
+	{
 		return response()->json(new MovieEditResource($movie));
 	}
 
 	public function updateMovie(Movie $movie, EditMovieRequest $request): JsonResponse
-    {
+	{
 		$movie->update([
 			'name'    => [
 				'en' => $request->name_en,
@@ -91,11 +91,11 @@ class MovieController extends Controller
 		$genreIds = explode(',', request()->genre_ids);
 		$movie->genres()->sync($genreIds);
 
-		return response()->json(new MovieResource($movie));
+		return response()->json(new MoviesResource($movie));
 	}
 
 	public function deleteMovie(Movie $movie): JsonResponse
-    {
+	{
 		$movie->delete();
 
 		return response()->json(['message' => 'Movie deleted successfully']);
