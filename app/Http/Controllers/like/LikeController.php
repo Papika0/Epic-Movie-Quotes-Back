@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class LikeController extends Controller
 {
 	public function like(Quote $quote): JsonResponse
-    {
+	{
 		$quote->likes()->attach(auth()->user()->id);
 
 		event(new QuoteLiked(
@@ -39,7 +39,7 @@ class LikeController extends Controller
 	}
 
 	public function unLike(Quote $quote): JsonResponse
-    {
+	{
 		$quote->likes()->detach(auth()->user()->id);
 
 		event(new QuoteLiked(

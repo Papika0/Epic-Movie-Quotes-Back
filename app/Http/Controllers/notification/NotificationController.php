@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 class NotificationController extends Controller
 {
 	public function getNotifications($page): JsonResponse
-    {
+	{
 		$user = User::findOrFail(auth()->user()->id);
 
 		$unreadNotifications = $user->notifications()->where('read', 0)->count();
@@ -30,13 +30,13 @@ class NotificationController extends Controller
 	}
 
 	public function markAsRead(Notification $id): JsonResponse
-    {
+	{
 		$id->update(['read' => 1]);
 		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($id)]);
 	}
 
 	public function markAllAsRead(): JsonResponse
-    {
+	{
 		$user = User::findOrFail(auth()->user()->id);
 		$user->notifications->where('read', 0)->each(function ($notification) {
 			$notification->update(['read' => 1]);
