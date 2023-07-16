@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\notification;
 
-use App\Models\User;
-use App\Models\Notifications;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\NotificationResource;
+use App\Http\Resources\Notification\NotificationResource;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
-	public function getNotifications($page)
+	public function getNotifications($page): JsonResponse
 	{
 		$user = User::findOrFail(auth()->user()->id);
 
@@ -28,13 +29,13 @@ class NotificationController extends Controller
 		);
 	}
 
-	public function markAsRead(Notifications $id)
+	public function markAsRead(Notification $id): JsonResponse
 	{
 		$id->update(['read' => 1]);
 		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($id)]);
 	}
 
-	public function markAllAsRead()
+	public function markAllAsRead(): JsonResponse
 	{
 		$user = User::findOrFail(auth()->user()->id);
 		$user->notifications->where('read', 0)->each(function ($notification) {

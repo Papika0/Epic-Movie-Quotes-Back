@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\profile;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Profile\ProfilePictureRequest;
+use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Http\Requests\ProfilePictureRequest;
 
 class ProfileController extends Controller
 {

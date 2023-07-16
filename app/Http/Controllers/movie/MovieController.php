@@ -2,35 +2,36 @@
 
 namespace App\Http\Controllers\movie;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Movie\CreateMovieRequest;
+use App\Http\Requests\Movie\EditMovieRequest;
+use App\Http\Resources\Genre\GenreCollection;
+use App\Http\Resources\Movie\MoviesResource;
+use App\Http\Resources\Movie\MovieEditResource;
+use App\Http\Resources\Movie\MovieResource;
 use App\Models\Genre;
 use App\Models\Movie;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\MovieResource;
-use App\Http\Requests\EditMovieRequest;
-use App\Http\Resources\GenreCollection;
-use App\Http\Resources\MovieCollection;
-use App\Http\Requests\CreateMovieRequest;
-use App\Http\Resources\MovieEditResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-	public function getMovies()
+	public function getMovies(): JsonResponse
 	{
-		return response()->json(new MovieCollection(auth()->user()->movies->sortByDesc('created_at')));
+		return response()->json(MoviesResource::collection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
-	public function getGenres()
+	public function getGenres(): JsonResponse
 	{
 		return response()->json(new GenreCollection(Genre::all()));
 	}
 
-	public function getMovie(Movie $movie)
+	public function getMovie(Movie $movie): JsonResponse
 	{
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function createMovie(CreateMovieRequest $request)
+	public function createMovie(CreateMovieRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('movies', 'public');
 
@@ -52,18 +53,18 @@ class MovieController extends Controller
 			'thumbnail'    => '/storage/' . $thumbnailPath,
 		]);
 
-		$genreIds = explode(',', $request->input('genre_ids'));
+		$genreIds = explode(',', $request->genre_ids);
 		$movie->genres()->attach($genreIds);
 
-		return response()->json(new MovieResource($movie));
+		return response()->json(new MoviesResource($movie));
 	}
 
-	public function editMovie(Movie $movie)
+	public function editMovie(Movie $movie): JsonResponse
 	{
 		return response()->json(new MovieEditResource($movie));
 	}
 
-	public function updateMovie(Movie $movie, EditMovieRequest $request)
+	public function updateMovie(Movie $movie, EditMovieRequest $request): JsonResponse
 	{
 		$movie->update([
 			'name'    => [
@@ -87,13 +88,13 @@ class MovieController extends Controller
 				'thumbnail' => '/storage/' . $thumbnailPath,
 			]);
 		}
-		$genreIds = explode(',', request()->input('genre_ids'));
+		$genreIds = explode(',', request()->genre_ids);
 		$movie->genres()->sync($genreIds);
 
-		return response()->json(new MovieResource($movie));
+		return response()->json(new MoviesResource($movie));
 	}
 
-	public function deleteMovie(Movie $movie)
+	public function deleteMovie(Movie $movie): JsonResponse
 	{
 		$movie->delete();
 

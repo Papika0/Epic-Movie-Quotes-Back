@@ -39,7 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
 	public function notifications()
 	{
-		return $this->hasMany(Notifications::class, 'to');
+		return $this->hasMany(Notification::class, 'to');
 	}
 
 	/**

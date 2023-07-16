@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\auth;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\LoginRequest;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller

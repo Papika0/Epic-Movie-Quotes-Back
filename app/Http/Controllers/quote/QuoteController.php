@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers\quote;
 
-use App\Models\Quote;
 use App\Events\CommentAdded;
-use App\Models\Notifications;
 use App\Events\NotificationSend;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\QuoteResource;
-use App\Http\Requests\AddQuoteRequest;
-use App\Http\Requests\EditQuoteRequest;
-use App\Http\Resources\CommentResource;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\AddCommentRequest;
-use App\Http\Resources\NotificationResource;
-use App\Http\Resources\QuotesNewsFeedResource;
+use App\Http\Requests\Quote\AddQuoteRequest;
+use App\Http\Requests\Quote\EditQuoteRequest;
+use App\Http\Resources\Comment\CommentResource;
+use App\Http\Resources\Feed\QuotesNewsFeedResource;
+use App\Http\Resources\Notification\NotificationResource;
+use App\Http\Resources\Quote\QuoteResource;
+use App\Models\Notification;
+use App\Models\Quote;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class QuoteController extends Controller
 {
-	public function getQuote(Quote $quote)
+	public function getQuote(Quote $quote): JsonResponse
 	{
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function updateQuote(Quote $quote, EditQuoteRequest $request)
+	public function updateQuote(Quote $quote, EditQuoteRequest $request): JsonResponse
 	{
 		$quote->update([
 			'content'    => [
@@ -41,14 +42,14 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function deleteQuote(Quote $quote)
+	public function deleteQuote(Quote $quote): JsonResponse
 	{
 		Storage::disk('public')->delete($quote->thumbnail);
 		$quote->delete();
 		return response()->json(['message' => 'Quote deleted successfully']);
 	}
 
-	public function createQuote(AddQuoteRequest $request)
+	public function createQuote(AddQuoteRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
 
@@ -65,7 +66,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function createComment(Quote $quote, AddCommentRequest $request)
+	public function createComment(Quote $quote, AddCommentRequest $request): JsonResponse
 	{
 		$comment = $quote->comments()->create([
 			'user_id'  => auth()->id(),
@@ -77,7 +78,7 @@ class QuoteController extends Controller
 			new CommentResource($comment)
 		));
 
-		$notification = Notifications::create([
+		$notification = Notification::create([
 			'to'       => $quote->user->id,
 			'from'     => auth()->user()->id,
 			'quote_id' => $quote->id,
@@ -90,7 +91,7 @@ class QuoteController extends Controller
 		return response()->json(new CommentResource($comment));
 	}
 
-	public function getQuotes($page)
+	public function getQuotes($page): JsonResponse
 	{
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
 		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
