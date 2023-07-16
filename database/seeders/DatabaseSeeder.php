@@ -5,11 +5,12 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\User;
-use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\Quote;
 use App\Models\Comment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\SeedGenresCommand;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,11 +21,11 @@ class DatabaseSeeder extends Seeder
 	{
 		$users = User::factory(3)->create();
 
-		$genres = Genre::factory(15)->create();
+		Artisan::call('seed:genres');
+
+		$genres = SeedGenresCommand::$genres;
 
 		$randomUsers = User::factory(25)->create();
-
-		$genre = $genres->random();
 
 		foreach ($users as $user) {
 			$movies = Movie::factory(5)->create(['user_id' => $user->id]);
@@ -37,7 +38,8 @@ class DatabaseSeeder extends Seeder
 
 				$quote = $quotes->random();
 
-				$movie->genres()->attach($genre->pluck('id'));
+				$genre = $genres->random();
+				$movie->genres()->attach($genre->id);
 
 				foreach ($randomUsers as $randomUser) {
 					$quote->likes()->attach($randomUser->id);

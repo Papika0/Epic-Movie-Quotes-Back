@@ -11,6 +11,8 @@ class SeedGenresCommand extends Command
 
 	protected $description = 'Seed genres table with predefined genres';
 
+	public static $genres;
+
 	/**
 	 * Execute the console command.
 	 */
@@ -59,5 +61,7 @@ class SeedGenresCommand extends Command
 		}
 
 		$this->info('Genres seeded successfully!');
+
+		self::$genres = DB::table('genres')->get();
 	}
 }
