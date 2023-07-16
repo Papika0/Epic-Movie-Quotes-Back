@@ -38,7 +38,9 @@ class Kernel extends HttpKernel
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 		],
 
-		'api' => [
+		'throttle' => ['throttle:99,1'],
+
+		'api'      => [
 			\App\Http\Middleware\EncryptCookies::class,
 			\App\Http\Middleware\VerifyCsrfToken::class,
 			\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
