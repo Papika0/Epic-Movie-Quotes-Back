@@ -14,7 +14,7 @@ use App\Http\Requests\Quote\AddQuoteRequest;
 use App\Http\Requests\Quote\EditQuoteRequest;
 use App\Http\Resources\Comment\CommentResource;
 use App\Http\Requests\Comment\AddCommentRequest;
-use App\Http\Resources\Feed\QuotesNewsFeedResource;
+use App\Http\Resources\NewsFeed\NewsFeedResource;
 use App\Http\Resources\Notification\NotificationResource;
 
 class QuoteController extends Controller
@@ -96,7 +96,7 @@ class QuoteController extends Controller
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
 		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
 		return response()->json([
-			'data'            => QuotesNewsFeedResource::collection($quotes),
+			'data'            => NewsFeedResource::collection($quotes),
 			'remaining_pages' => $remainingPages,
 		]);
 	}

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Feed;
+namespace App\Http\Resources\NewsFeed;
 
 use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuotesNewsFeedResource extends JsonResource
+class NewsFeedResource extends JsonResource
 {
 	public function toArray(Request $request): array
 	{
