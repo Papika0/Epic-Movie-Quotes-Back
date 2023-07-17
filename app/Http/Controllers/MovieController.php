@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\movie;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreMovieRequest;
 use App\Http\Requests\Movie\UpdateMovieRequest;
-use App\Http\Resources\Genre\GenreCollection;
 use App\Http\Resources\Movie\MoviesResource;
 use App\Http\Resources\Movie\MovieEditResource;
 use App\Http\Resources\Movie\MovieResource;
-use App\Models\Genre;
 use App\Models\Movie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -19,11 +16,6 @@ class MovieController extends Controller
 	public function getMovies(): JsonResponse
 	{
 		return response()->json(MoviesResource::collection(auth()->user()->movies->sortByDesc('created_at')));
-	}
-
-	public function getGenres(): JsonResponse
-	{
-		return response()->json(new GenreCollection(Genre::all()));
 	}
 
 	public function getMovie(Movie $movie): JsonResponse
@@ -64,7 +56,7 @@ class MovieController extends Controller
 		return response()->json(new MovieEditResource($movie));
 	}
 
-	public function updateMovie(Movie $movie, UpdateMovieRequest $request): JsonResponse
+	public function updateMovie(UpdateMovieRequest $request, Movie $movie): JsonResponse
 	{
 		$movie->update([
 			'name'    => [

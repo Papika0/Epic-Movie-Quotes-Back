@@ -1,21 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\quote;
+namespace App\Http\Controllers;
 
 use App\Models\Quote;
-use App\Events\CommentAdded;
-use App\Models\Notification;
-use App\Events\NotificationSend;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Quote\QuoteResource;
 use App\Http\Requests\Quote\StoreQuoteRequest;
 use App\Http\Requests\Quote\UpdateQuoteRequest;
-use App\Http\Resources\Comment\CommentResource;
-use App\Http\Requests\Comment\StoreCommentRequest;
-use App\Http\Resources\NewsFeed\NewsFeedResource;
-use App\Http\Resources\Notification\NotificationResource;
+use App\Http\Resources\NewsFeedResource;
 
 class QuoteController extends Controller
 {
@@ -24,7 +17,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function updateQuote(Quote $quote, UpdateQuoteRequest $request): JsonResponse
+	public function updateQuote(UpdateQuoteRequest $request, Quote $quote): JsonResponse
 	{
 		$quote->update([
 			'content'    => [
@@ -64,31 +57,6 @@ class QuoteController extends Controller
 		]);
 
 		return response()->json(new QuoteResource($quote));
-	}
-
-	public function StoreComment(Quote $quote, StoreCommentRequest $request): JsonResponse
-	{
-		$comment = $quote->comments()->create([
-			'user_id'  => auth()->id(),
-			'content'  => $request->content,
-			'quote_id' => $quote->id,
-		]);
-
-		event(new CommentAdded(
-			new CommentResource($comment)
-		));
-
-		$notification = Notification::create([
-			'to'       => $quote->user->id,
-			'from'     => auth()->user()->id,
-			'quote_id' => $quote->id,
-			'type'     => 'comment',
-			'read'     => 0,
-		]);
-
-		event(new NotificationSend(new NotificationResource($notification)));
-
-		return response()->json(new CommentResource($comment));
 	}
 
 	public function getQuotes(int $page): JsonResponse

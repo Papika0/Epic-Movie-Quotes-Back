@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\like;
+namespace App\Http\Controllers;
 
 use App\Events\NotificationSend;
 use App\Events\QuoteLikeUpdated;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Notification\NotificationResource;
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use App\Models\Quote;
 use Illuminate\Http\JsonResponse;

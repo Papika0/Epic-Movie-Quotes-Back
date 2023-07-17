@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\profile;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\ProfilePictureRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
