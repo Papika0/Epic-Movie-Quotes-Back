@@ -54,10 +54,10 @@ class GoogleAuthController extends Controller
 					'message' => 'Register success',
 				], 201);
 			}
-		} catch (\Throwable $th) {
+		} catch (\Throwable $error) {
 			return response()->json([
 				'status'  => 'error',
-				'message' => $th->getMessage(),
+				'message' => $error->getMessage(),
 			]);
 		}
 	}

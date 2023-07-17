@@ -10,10 +10,10 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Quote\QuoteResource;
-use App\Http\Requests\Quote\AddQuoteRequest;
-use App\Http\Requests\Quote\EditQuoteRequest;
+use App\Http\Requests\Quote\StoreQuoteRequest;
+use App\Http\Requests\Quote\UpdateQuoteRequest;
 use App\Http\Resources\Comment\CommentResource;
-use App\Http\Requests\Comment\AddCommentRequest;
+use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Resources\NewsFeed\NewsFeedResource;
 use App\Http\Resources\Notification\NotificationResource;
 
@@ -24,7 +24,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function updateQuote(Quote $quote, EditQuoteRequest $request): JsonResponse
+	public function updateQuote(Quote $quote, UpdateQuoteRequest $request): JsonResponse
 	{
 		$quote->update([
 			'content'    => [
@@ -49,7 +49,7 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote deleted successfully']);
 	}
 
-	public function createQuote(AddQuoteRequest $request): JsonResponse
+	public function StoreQuote(StoreQuoteRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
 
@@ -66,7 +66,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote));
 	}
 
-	public function createComment(Quote $quote, AddCommentRequest $request): JsonResponse
+	public function StoreComment(Quote $quote, StoreCommentRequest $request): JsonResponse
 	{
 		$comment = $quote->comments()->create([
 			'user_id'  => auth()->id(),

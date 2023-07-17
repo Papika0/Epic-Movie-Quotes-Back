@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\like;
 
 use App\Events\NotificationSend;
-use App\Events\QuoteLiked;
+use App\Events\QuoteLikeUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Notification\NotificationResource;
 use App\Models\Notification;
@@ -16,7 +16,7 @@ class LikeController extends Controller
 	{
 		$quote->likes()->attach(auth()->user()->id);
 
-		event(new QuoteLiked(
+		event(new QuoteLikeUpdated(
 			[
 				'quote_id'    => $quote->id,
 				'likes_count' => $quote->likes()->count(),
@@ -42,7 +42,7 @@ class LikeController extends Controller
 	{
 		$quote->likes()->detach(auth()->user()->id);
 
-		event(new QuoteLiked(
+		event(new QuoteLikeUpdated(
 			[
 				'quote_id'    => $quote->id,
 				'likes_count' => $quote->likes()->count(),

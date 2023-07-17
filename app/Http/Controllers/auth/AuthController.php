@@ -72,7 +72,7 @@ class AuthController extends Controller
 		], 200);
 	}
 
-	public function user(): JsonResponse
+	public function authorizedUser(): JsonResponse
 	{
 		return response()->json([
 			'status'             => true,

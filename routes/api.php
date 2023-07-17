@@ -7,7 +7,7 @@ use App\Http\Controllers\movie\MovieController;
 use App\Http\Controllers\quote\QuoteController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\auth\GoogleAuthController;
-use App\Http\Controllers\profile\ProfileController;
+use App\Http\Controllers\profile\UserController;
 use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\auth\EmailVerificationController;
 use App\Http\Controllers\notification\NotificationController;
@@ -37,10 +37,10 @@ Route::controller(GoogleAuthController::class)->prefix('/auth/google')->group(fu
 Route::middleware('auth:sanctum')->group(function () {
 	Route::controller(AuthController::class)->group(function () {
 		Route::post('/logout', 'logout')->name('logout');
-		Route::get('/user', 'user')->name('user');
+		Route::get('/user', 'authorizedUser')->name('user');
 	});
 
-	Route::prefix('profile')->controller(ProfileController::class)->group(function () {
+	Route::prefix('profile')->controller(UserController::class)->group(function () {
 		Route::post('/update-profile', 'updateProfile')->name('profile.change_email');
 		Route::post('/upload-thumbnail', 'uploadThumbnail')->name('profile.upload_thumbnail');
 	});
@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 		});
 
 		Route::get('/', 'getMovies')->name('movies');
-		Route::post('/create', 'createMovie')->name('movies.create');
+		Route::post('/create', 'StoreMovie')->name('movies.create');
 	});
 
 	Route::get('/genres', [MovieController::class, 'getGenres'])->name('movies.genres');
@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
 			Route::get('/', 'getQuote')->name('quotes.get');
 			Route::post('/update', 'updateQuote')->name('quotes.update');
 			Route::delete('/delete', 'deleteQuote')->name('quotes.delete');
-			Route::post('/create-comment', 'createComment')->name('quotes.create_comment');
+			Route::post('/create-comment', 'StoreComment')->name('quotes.create_comment');
 
 			Route::controller(LikeController::class)->group(function () {
 				Route::post('/like', 'like')->name('quotes.like');
@@ -73,12 +73,12 @@ Route::middleware('auth:sanctum')->group(function () {
 		});
 
 		Route::get('/{page}/get-quotes', 'getQuotes')->name('quotes');
-		Route::post('/create', 'createQuote')->name('quotes.create');
+		Route::post('/create', 'StoreQuote')->name('quotes.create');
 	});
 
 	Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
 		Route::get('/{page}', 'getNotifications')->name('notifications.get');
-		Route::post('/{id}/mark-as-read', 'markAsRead')->name('notifications.mark_as_read');
+		Route::post('/{notification}/mark-as-read', 'markAsRead')->name('notifications.mark_as_read');
 		Route::post('/mark-all-as-read', 'markAllAsRead')->name('notifications.mark_all_as_read');
 	});
 });

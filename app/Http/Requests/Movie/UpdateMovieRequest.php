@@ -4,7 +4,7 @@ namespace App\Http\Requests\Movie;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateMovieRequest extends FormRequest
+class UpdateMovieRequest extends FormRequest
 {
 	public function rules(): array
 	{
@@ -17,7 +17,7 @@ class CreateMovieRequest extends FormRequest
 			'director_ka'             => 'required|string',
 			'release_year'            => 'required|integer',
 			'genre_ids'               => 'required',
-			'thumbnail'               => 'required|image',
+			'thumbnail'               => 'image',
 		];
 	}
 }

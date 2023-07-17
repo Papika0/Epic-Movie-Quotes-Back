@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\movie;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Movie\CreateMovieRequest;
-use App\Http\Requests\Movie\EditMovieRequest;
+use App\Http\Requests\Movie\StoreMovieRequest;
+use App\Http\Requests\Movie\UpdateMovieRequest;
 use App\Http\Resources\Genre\GenreCollection;
 use App\Http\Resources\Movie\MoviesResource;
 use App\Http\Resources\Movie\MovieEditResource;
@@ -31,7 +31,7 @@ class MovieController extends Controller
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function createMovie(CreateMovieRequest $request): JsonResponse
+	public function StoreMovie(StoreMovieRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('movies', 'public');
 
@@ -64,7 +64,7 @@ class MovieController extends Controller
 		return response()->json(new MovieEditResource($movie));
 	}
 
-	public function updateMovie(Movie $movie, EditMovieRequest $request): JsonResponse
+	public function updateMovie(Movie $movie, UpdateMovieRequest $request): JsonResponse
 	{
 		$movie->update([
 			'name'    => [

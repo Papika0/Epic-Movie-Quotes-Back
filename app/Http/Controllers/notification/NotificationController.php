@@ -29,10 +29,10 @@ class NotificationController extends Controller
 		);
 	}
 
-	public function markAsRead(Notification $id): JsonResponse
+	public function markAsRead(Notification $notification): JsonResponse
 	{
-		$id->update(['read' => 1]);
-		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($id)]);
+		$notification->update(['read' => 1]);
+		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($notification)]);
 	}
 
 	public function markAllAsRead(): JsonResponse
