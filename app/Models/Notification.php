@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notification extends Model
 {
@@ -12,13 +12,13 @@ class Notification extends Model
 
 	protected $guarded = ['id'];
 
-	public function sender(): Relation
+	public function sender(): BelongsTo
 	{
 		return $this->belongsTo(User::class, 'from');
 	}
 
-	public function receiver(): Relation
-	{
+	public function receiver(): BelongsTo
+    {
 		return $this->belongsTo(User::class, 'to');
 	}
 }

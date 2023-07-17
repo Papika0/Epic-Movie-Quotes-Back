@@ -91,7 +91,7 @@ class QuoteController extends Controller
 		return response()->json(new CommentResource($comment));
 	}
 
-	public function getQuotes($page): JsonResponse
+	public function getQuotes(int $page): JsonResponse
 	{
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
 		$remainingPages = $quotes->lastPage() - $quotes->currentPage();

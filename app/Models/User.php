@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,28 +19,28 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
 	use Notifiable;
 
-	public function movies()
-	{
+	public function movies(): HasMany
+    {
 		return $this->hasMany(Movie::class);
 	}
 
-	public function quotes()
-	{
+	public function quotes(): HasMany
+    {
 		return $this->hasMany(Quote::class);
 	}
 
-	public function likes()
-	{
+	public function likes(): BelongsToMany
+    {
 		return $this->belongsToMany(Quote::class, 'likes');
 	}
 
-	public function comments()
-	{
+	public function comments(): HasMany
+    {
 		return $this->hasMany(Comment::class);
 	}
 
-	public function notifications()
-	{
+	public function notifications(): HasMany
+    {
 		return $this->hasMany(Notification::class, 'to');
 	}
 

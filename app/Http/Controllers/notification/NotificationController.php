@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
-	public function getNotifications($page): JsonResponse
+	public function getNotifications(int $page): JsonResponse
 	{
 		$user = User::findOrFail(auth()->user()->id);
 

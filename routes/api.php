@@ -31,7 +31,7 @@ Route::prefix('reset-password')->controller(ResetPasswordController::class)->gro
 
 Route::controller(GoogleAuthController::class)->prefix('/auth/google')->group(function () {
 	Route::get('/', 'redirectToGoogle')->name('google.redirect');
-	Route::get('/call-back', 'handleGoogleCallback')->name('google.callback');
+	Route::get('/callback', 'handleGoogleCallback')->name('google.callback');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
