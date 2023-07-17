@@ -20,27 +20,27 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 	use Notifiable;
 
 	public function movies(): HasMany
-    {
+	{
 		return $this->hasMany(Movie::class);
 	}
 
 	public function quotes(): HasMany
-    {
+	{
 		return $this->hasMany(Quote::class);
 	}
 
 	public function likes(): BelongsToMany
-    {
+	{
 		return $this->belongsToMany(Quote::class, 'likes');
 	}
 
 	public function comments(): HasMany
-    {
+	{
 		return $this->hasMany(Comment::class);
 	}
 
 	public function notifications(): HasMany
-    {
+	{
 		return $this->hasMany(Notification::class, 'to');
 	}
 
@@ -76,4 +76,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 		'email_verified_at' => 'datetime',
 		'password'          => 'hashed',
 	];
+
+	public function setPasswordAttribute($value)
+	{
+		$this->attributes['password'] = bcrypt($value);
+	}
 }

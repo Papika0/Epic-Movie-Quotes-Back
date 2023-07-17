@@ -6,7 +6,6 @@ use App\Http\Requests\Profile\ProfilePictureRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -28,7 +27,7 @@ class UserController extends Controller
 		}
 
 		if ($request->has('password')) {
-			$user->password = Hash::make($request->password);
+			$user->password = $request->password;
 		}
 
 		$user->save();

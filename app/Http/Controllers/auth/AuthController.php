@@ -10,7 +10,6 @@ use Faker\Factory as Faker;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -18,10 +17,7 @@ class AuthController extends Controller
 	public function register(RegisterRequest $request): JsonResponse
 	{
 		$user = User::create([
-			'username' => $request->username,
-			'email'    => $request->email,
-			'password' => Hash::make($request->password),
-		]);
+			...$request->validated(), ]);
 
 		event(new Registered($user));
 
@@ -39,20 +35,11 @@ class AuthController extends Controller
 
 	public function login(LoginRequest $request): JsonResponse
 	{
-		$credentials = $request->only(['password']);
-		$username = $request->email;
-
-		if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
-			$credentials['email'] = $username;
-		} else {
-			$credentials['username'] = $username;
-		}
-
-		$user = User::where('email', $username)
-			->orWhere('username', $username)
+		$user = User::where('email', $request->email)
+			->orWhere('username', $request->username)
 			->first();
 
-		if (!Auth::attempt($credentials, $request->has('remember'))) {
+		if (!Auth::attempt($request->validated(), $request->has('remember'))) {
 			return response()->json([
 				'message' => __('auth.failed'),
 			], 401);
@@ -77,7 +64,6 @@ class AuthController extends Controller
 		return response()->json([
 			'status'             => true,
 			'user'               => Auth::user(),
-			'movies_count' 	     => Auth::user()->movies->count(),
 		], 200);
 	}
 
