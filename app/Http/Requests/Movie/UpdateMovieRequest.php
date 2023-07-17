@@ -9,12 +9,12 @@ class UpdateMovieRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'name_en'                 => 'required|string',
-			'name_ka'                 => 'required|string',
-			'description_en'          => 'required|string',
-			'description_ka'          => 'required|string',
-			'director_en'             => 'required|string',
-			'director_ka'             => 'required|string',
+			'name.en'                 => 'required|string',
+			'name.ka'                 => 'required|string',
+			'description.en'          => 'required|string',
+			'description.ka'          => 'required|string',
+			'director.en'             => 'required|string',
+			'director.ka'             => 'required|string',
 			'release_year'            => 'required|integer',
 			'genre_ids'               => 'required',
 			'thumbnail'               => 'image',

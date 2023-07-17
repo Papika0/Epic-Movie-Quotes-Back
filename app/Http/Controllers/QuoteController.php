@@ -14,16 +14,15 @@ class QuoteController extends Controller
 {
 	public function getQuote(Quote $quote): JsonResponse
 	{
+		$this->authorize('view', $quote);
 		return response()->json(new QuoteResource($quote));
 	}
 
 	public function updateQuote(UpdateQuoteRequest $request, Quote $quote): JsonResponse
 	{
+		$this->authorize('update', $quote);
 		$quote->update([
-			'content'    => [
-				'en' => $request->content_en,
-				'ka' => $request->content_ka,
-			],
+			...$request->validated(),
 		]);
 		if ($request->hasFile('thumbnail')) {
 			Storage::disk('public')->delete($quote->thumbnail);
@@ -37,6 +36,7 @@ class QuoteController extends Controller
 
 	public function deleteQuote(Quote $quote): JsonResponse
 	{
+		$this->authorize('delete', $quote);
 		Storage::disk('public')->delete($quote->thumbnail);
 		$quote->delete();
 		return response()->json(['message' => 'Quote deleted successfully']);
@@ -47,12 +47,8 @@ class QuoteController extends Controller
 		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
 
 		$quote = Quote::create([
+			...$request->validated(),
 			'user_id'    => auth()->id(),
-			'content'    => [
-				'en' => $request->content_en,
-				'ka' => $request->content_ka,
-			],
-			'movie_id'   => $request->movie_id,
 			'thumbnail'  => '/storage/' . $thumbnailPath,
 		]);
 
