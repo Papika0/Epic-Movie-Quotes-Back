@@ -12,18 +12,18 @@ use App\Http\Resources\Movie\MovieDetailResource;
 
 class MovieController extends Controller
 {
-	public function getMovies(): JsonResponse
+	public function index(): JsonResponse
 	{
 		return response()->json(MovieResource::collection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
-	public function getMovie(Movie $movie): JsonResponse
+	public function get(Movie $movie): JsonResponse
 	{
 		$this->authorize('view', $movie);
 		return response()->json(new MovieDetailResource($movie));
 	}
 
-	public function StoreMovie(StoreMovieRequest $request): JsonResponse
+	public function store(StoreMovieRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('movies', 'public');
 
@@ -38,7 +38,7 @@ class MovieController extends Controller
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function updateMovie(UpdateMovieRequest $request, Movie $movie): JsonResponse
+	public function update(UpdateMovieRequest $request, Movie $movie): JsonResponse
 	{
 		$this->authorize('update', $movie);
 		$movie->update([
@@ -57,7 +57,7 @@ class MovieController extends Controller
 		return response()->json(new MovieResource($movie));
 	}
 
-	public function deleteMovie(Movie $movie): JsonResponse
+	public function delete(Movie $movie): JsonResponse
 	{
 		$this->authorize('delete', $movie);
 		$movie->delete();

@@ -13,11 +13,11 @@ use App\Http\Requests\Comment\StoreCommentRequest;
 
 class CommentController extends Controller
 {
-	public function StoreComment(StoreCommentRequest $request, Quote $quote): JsonResponse
+	public function store(StoreCommentRequest $request, Quote $quote): JsonResponse
 	{
 		$comment = $quote->comments()->create([
 			'user_id'  => auth()->id(),
-			'content'  => $request->content,
+			...$request->validated(),
 			'quote_id' => $quote->id,
 		]);
 

@@ -15,7 +15,7 @@ class QuoteLikeUpdated implements ShouldBroadcast
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct(public $message)
+	public function __construct(public array $message)
 	{
 	}
 

@@ -12,13 +12,13 @@ use App\Http\Resources\NewsFeedResource;
 
 class QuoteController extends Controller
 {
-	public function getQuote(Quote $quote): JsonResponse
+	public function get(Quote $quote): JsonResponse
 	{
 		$this->authorize('view', $quote);
 		return response()->json(new QuoteResource($quote), 200);
 	}
 
-	public function updateQuote(UpdateQuoteRequest $request, Quote $quote): JsonResponse
+	public function update(UpdateQuoteRequest $request, Quote $quote): JsonResponse
 	{
 		$this->authorize('update', $quote);
 		$quote->update([
@@ -34,7 +34,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote), 200);
 	}
 
-	public function deleteQuote(Quote $quote): JsonResponse
+	public function delete(Quote $quote): JsonResponse
 	{
 		$this->authorize('delete', $quote);
 		Storage::disk('public')->delete($quote->thumbnail);
@@ -42,7 +42,7 @@ class QuoteController extends Controller
 		return response()->json(['message' => 'Quote deleted successfully'], 200);
 	}
 
-	public function StoreQuote(StoreQuoteRequest $request): JsonResponse
+	public function store(StoreQuoteRequest $request): JsonResponse
 	{
 		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
 
@@ -55,7 +55,7 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote), 200);
 	}
 
-	public function getQuotes(int $page): JsonResponse
+	public function index(int $page): JsonResponse
 	{
 		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
 		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
