@@ -5,23 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\Movie\MovieDetailResource;
 use App\Http\Resources\Movie\MovieResource;
-use App\Http\Resources\Movie\MoviesResource;
 use App\Http\Requests\Movie\StoreMovieRequest;
 use App\Http\Requests\Movie\UpdateMovieRequest;
-use App\Http\Resources\Movie\MovieEditResource;
 
 class MovieController extends Controller
 {
 	public function getMovies(): JsonResponse
 	{
-		return response()->json(MoviesResource::collection(auth()->user()->movies->sortByDesc('created_at')));
+		return response()->json(MovieResource::collection(auth()->user()->movies->sortByDesc('created_at')));
 	}
 
 	public function getMovie(Movie $movie): JsonResponse
 	{
 		$this->authorize('view', $movie);
-		return response()->json(new MovieResource($movie));
+		return response()->json(new MovieDetailResource($movie));
 	}
 
 	public function StoreMovie(StoreMovieRequest $request): JsonResponse
@@ -36,12 +35,7 @@ class MovieController extends Controller
 
 		$movie->genres()->sync($request->genre_ids);
 
-		return response()->json(new MoviesResource($movie));
-	}
-
-	public function editMovie(Movie $movie): JsonResponse
-	{
-		return response()->json(new MovieEditResource($movie));
+		return response()->json(new MovieResource($movie));
 	}
 
 	public function updateMovie(UpdateMovieRequest $request, Movie $movie): JsonResponse
@@ -60,7 +54,7 @@ class MovieController extends Controller
 
 		$movie->genres()->sync($request->genre_ids);
 
-		return response()->json(new MoviesResource($movie));
+		return response()->json(new MovieResource($movie));
 	}
 
 	public function deleteMovie(Movie $movie): JsonResponse

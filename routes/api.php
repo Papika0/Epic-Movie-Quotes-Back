@@ -50,7 +50,6 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::prefix('movies')->controller(MovieController::class)->group(function () {
 		Route::prefix('{movie}')->group(function () {
 			Route::get('/', 'getMovie')->name('movies.get');
-			Route::get('/edit', 'editMovie')->name('movies.edit');
 			Route::post('/update', 'updateMovie')->name('movies.update');
 			Route::delete('/delete', 'deleteMovie')->name('movies.delete');
 		});
