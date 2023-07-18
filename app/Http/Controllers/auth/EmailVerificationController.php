@@ -22,7 +22,7 @@ class EmailVerificationController extends Controller
 					'email'           => $user->temporary_email,
 					'temporary_email' => null,
 				]);
-				return response()->json('Email has updated successfully !');
+				return response()->json([], 204);
 			}
 			return response()->json(['message' => 'Email verification failed !', 'email' => $user->getEmailForVerification()], 401);
 		}
@@ -32,7 +32,7 @@ class EmailVerificationController extends Controller
 			event(new Verified($user));
 		}
 
-		return response()->json('Email verified successfully !');
+		return response()->json([], 204);
 	}
 
 	public function resend(ResendEmailRequest $request): JsonResponse
@@ -40,11 +40,11 @@ class EmailVerificationController extends Controller
 		$user = User::where('email', $request->email)->firstOrFail();
 
 		if ($user->hasVerifiedEmail()) {
-			return response()->json('Email already verified!', 200);
+			return response()->json([], 204);
 		}
 
 		$user->sendEmailVerificationNotification();
 
-		return response()->json('Email verification link resent!', 200);
+		return response()->json([], 204);
 	}
 }

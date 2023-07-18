@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\Movie\MovieDetailResource;
 use App\Http\Resources\Movie\MovieResource;
 use App\Http\Requests\Movie\StoreMovieRequest;
 use App\Http\Requests\Movie\UpdateMovieRequest;
+use App\Http\Resources\Movie\MovieDetailResource;
 
 class MovieController extends Controller
 {
@@ -62,6 +62,6 @@ class MovieController extends Controller
 		$this->authorize('delete', $movie);
 		$movie->delete();
 
-		return response()->json(['message' => 'Movie deleted successfully']);
+		return response()->json(['message' => 'Movie deleted successfully'], 200);
 	}
 }

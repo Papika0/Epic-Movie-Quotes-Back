@@ -34,7 +34,7 @@ class LikeController extends Controller
 
 		return response()->json([
 			'message'     => 'Quote liked successfully',
-		]);
+		], 200);
 	}
 
 	public function unLike(Quote $quote): JsonResponse
@@ -52,6 +52,6 @@ class LikeController extends Controller
 
 		return response()->json([
 			'message'     => 'Quote unliked successfully',
-		]);
+		], 200);
 	}
 }

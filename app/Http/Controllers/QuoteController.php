@@ -15,7 +15,7 @@ class QuoteController extends Controller
 	public function getQuote(Quote $quote): JsonResponse
 	{
 		$this->authorize('view', $quote);
-		return response()->json(new QuoteResource($quote));
+		return response()->json(new QuoteResource($quote), 200);
 	}
 
 	public function updateQuote(UpdateQuoteRequest $request, Quote $quote): JsonResponse
@@ -31,7 +31,7 @@ class QuoteController extends Controller
 				'thumbnail' => '/storage/' . $thumbnailPath,
 			]);
 		}
-		return response()->json(new QuoteResource($quote));
+		return response()->json(new QuoteResource($quote), 200);
 	}
 
 	public function deleteQuote(Quote $quote): JsonResponse
@@ -39,7 +39,7 @@ class QuoteController extends Controller
 		$this->authorize('delete', $quote);
 		Storage::disk('public')->delete($quote->thumbnail);
 		$quote->delete();
-		return response()->json(['message' => 'Quote deleted successfully']);
+		return response()->json(['message' => 'Quote deleted successfully'], 200);
 	}
 
 	public function StoreQuote(StoreQuoteRequest $request): JsonResponse
@@ -52,7 +52,7 @@ class QuoteController extends Controller
 			'thumbnail'  => '/storage/' . $thumbnailPath,
 		]);
 
-		return response()->json(new QuoteResource($quote));
+		return response()->json(new QuoteResource($quote), 200);
 	}
 
 	public function getQuotes(int $page): JsonResponse
@@ -62,6 +62,6 @@ class QuoteController extends Controller
 		return response()->json([
 			'data'            => NewsFeedResource::collection($quotes),
 			'remaining_pages' => $remainingPages,
-		]);
+		], 200);
 	}
 }

@@ -24,14 +24,15 @@ class NotificationController extends Controller
 		return response()->json(
 			['data'                 => NotificationResource::collection($notifications),
 				'pages_left'           => $remainingPages,
-				'unread_notifications' => $unreadNotifications]
+				'unread_notifications' => $unreadNotifications],
+			200
 		);
 	}
 
 	public function markAsRead(Notification $notification): JsonResponse
 	{
 		$notification->update(['read' => 1]);
-		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($notification)]);
+		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($notification)], 200);
 	}
 
 	public function markAllAsRead(): JsonResponse
@@ -40,6 +41,6 @@ class NotificationController extends Controller
 		$user->notifications->where('read', 0)->each(function ($notification) {
 			$notification->update(['read' => 1]);
 		});
-		return response()->json(['Notifications marked as read']);
+		return response()->json(['Notifications marked as read'], 200);
 	}
 }

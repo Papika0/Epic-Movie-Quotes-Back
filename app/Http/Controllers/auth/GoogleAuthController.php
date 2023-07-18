@@ -14,9 +14,8 @@ class GoogleAuthController extends Controller
 	{
 		$url = Socialite::driver('google')->redirect()->getTargetUrl();
 		return response()->json([
-			'status' => 'success',
 			'url'    => $url,
-		]);
+		], 200);
 	}
 
 	public function handleGoogleCallback(): JsonResponse
@@ -29,9 +28,8 @@ class GoogleAuthController extends Controller
 			if ($user) {
 				auth()->login($user, true);
 				return response()->json([
-					'status'  => 'success',
 					'message' => 'Login success',
-				], 201);
+				], 200);
 			} else {
 				$newUser = User::create([
 					'username'          => $googleUser->GetName(),
@@ -43,15 +41,13 @@ class GoogleAuthController extends Controller
 
 				auth()->login($newUser, true);
 				return response()->json([
-					'status'  => 'success',
 					'message' => 'Register success',
 				], 201);
 			}
 		} catch (\Throwable $error) {
 			return response()->json([
-				'status'  => 'error',
 				'message' => $error->getMessage(),
-			]);
+			], 500);
 		}
 	}
 }

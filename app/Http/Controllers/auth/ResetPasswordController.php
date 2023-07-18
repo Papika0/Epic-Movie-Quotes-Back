@@ -22,7 +22,7 @@ class ResetPasswordController extends Controller
 		return $status === Password::RESET_LINK_SENT
 		? response()->json(['message' => 'Email was sent successfully !',
 			'email'                      => $request->email], 200)
-		: response()->json("Email hasn't verified successfully !", 400);
+		: response()->json(['message' =>"Email hasn't verified successfully !"], 400);
 	}
 
 	public function reset(PasswordResetRequest $request): JsonResponse
@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
 		);
 
 		return $status === Password::PASSWORD_RESET
-		? response()->json('password has reseted successfully !', 200)
-		: response()->json('password hasnt reseted successfully !', 400);
+		? response()->json(['message' =>'password has reseted successfully !'], 200)
+		: response()->json(['message' =>'password hasnt reseted successfully !'], 400);
 	}
 }

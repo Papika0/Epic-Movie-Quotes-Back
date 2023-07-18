@@ -32,9 +32,8 @@ class UserController extends Controller
 
 		$user->save();
 		return response()->json([
-			'message'  => 'Profile updated successfully',
 			'user'     => $user,
-		]);
+		], 200);
 	}
 
 	public function uploadThumbnail(ProfilePictureRequest $request): JsonResponse
@@ -51,8 +50,7 @@ class UserController extends Controller
 		}
 
 		return response()->json([
-			'message' => 'Thumbnail uploaded successfully',
 			'user'    => $user,
-		]);
+		], 201);
 	}
 }

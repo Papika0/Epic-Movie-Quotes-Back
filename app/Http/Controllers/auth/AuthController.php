@@ -21,7 +21,6 @@ class AuthController extends Controller
 		event(new Registered($user));
 
 		return response()->json([
-			'status'       => true,
 			'email'        => $user->email,
 		], 201);
 	}
@@ -47,15 +46,12 @@ class AuthController extends Controller
 
 		$request->session()->regenerate();
 
-		return response()->json([
-			'status'       => true,
-		], 200);
+		return response()->json([], 204);
 	}
 
 	public function authorizedUser(): JsonResponse
 	{
 		return response()->json([
-			'status'             => true,
 			'user'               => Auth::user(),
 		], 200);
 	}
@@ -64,9 +60,6 @@ class AuthController extends Controller
 	{
 		Auth::guard('web')->logout();
 		Session::flush();
-		return response()->json([
-			'status'  => true,
-			'message' => 'Logout success',
-		]);
+		return response()->json([], 204);
 	}
 }
