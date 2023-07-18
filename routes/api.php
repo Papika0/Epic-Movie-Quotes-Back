@@ -48,35 +48,35 @@ Route::middleware('auth:sanctum')->group(function () {
 	});
 
 	Route::prefix('movies')->controller(MovieController::class)->group(function () {
+		Route::get('/', 'index')->name('movies.index');
+		Route::post('/', 'store')->name('movies.create');
+
 		Route::prefix('{movie}')->group(function () {
 			Route::get('/', 'get')->name('movies.get');
-			Route::post('/update', 'update')->name('movies.update');
-			Route::delete('/delete', 'delete')->name('movies.delete');
+			Route::post('/', 'update')->name('movies.update');
+			Route::delete('/', 'destroy')->name('movies.destroy');
 		});
-
-		Route::get('/', 'index')->name('movies.index');
-		Route::post('/create', 'store')->name('movies.create');
 	});
 
 	Route::get('/genres', [GenreController::class, 'index'])->name('movies.genres');
 
 	Route::prefix('quotes')->controller(QuoteController::class)->group(function () {
+		Route::get('/page/{page}', 'index')->name('quotes.index');
+		Route::post('/', 'store')->name('quotes.create');
+
 		Route::prefix('{quote}')->group(function () {
 			Route::get('/', 'get')->name('quotes.get');
-			Route::post('/update', 'update')->name('quotes.update');
-			Route::delete('/delete', 'delete')->name('quotes.delete');
+			Route::post('/', 'update')->name('quotes.update');
+			Route::delete('/', 'destroy')->name('quotes.destroy');
 
 			Route::controller(LikeController::class)->group(function () {
 				Route::post('/like', 'like')->name('quotes.like');
 				Route::post('/unlike', 'unlike')->name('quotes.unlike');
 			});
 		});
-
-		Route::get('/{page}/get-quotes', 'index')->name('quotes.index');
-		Route::post('/create', 'store')->name('quotes.create');
 	});
 
-	Route::post('/quotes/{quote}/create-comment', [CommentController::class, 'store'])->name('quotes.comment.store');
+	Route::post('/comment/{quote}/', [CommentController::class, 'store'])->name('quotes.comment.store');
 
 	Route::prefix('notifications')->controller(NotificationController::class)->group(function () {
 		Route::get('/{page}', 'index')->name('notifications.index');

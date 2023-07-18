@@ -12,9 +12,32 @@ use App\Http\Resources\NewsFeedResource;
 
 class QuoteController extends Controller
 {
+	public function index(int $page): JsonResponse
+	{
+		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
+		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
+		return response()->json([
+			'data'            => NewsFeedResource::collection($quotes),
+			'remaining_pages' => $remainingPages,
+		], 200);
+	}
+
 	public function get(Quote $quote): JsonResponse
 	{
 		$this->authorize('view', $quote);
+		return response()->json(new QuoteResource($quote), 200);
+	}
+
+	public function store(StoreQuoteRequest $request): JsonResponse
+	{
+		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
+
+		$quote = Quote::create([
+			...$request->validated(),
+			'user_id'    => auth()->id(),
+			'thumbnail'  => '/storage/' . $thumbnailPath,
+		]);
+
 		return response()->json(new QuoteResource($quote), 200);
 	}
 
@@ -34,34 +57,11 @@ class QuoteController extends Controller
 		return response()->json(new QuoteResource($quote), 200);
 	}
 
-	public function delete(Quote $quote): JsonResponse
+	public function destroy(Quote $quote): JsonResponse
 	{
 		$this->authorize('delete', $quote);
 		Storage::disk('public')->delete($quote->thumbnail);
 		$quote->delete();
 		return response()->json(['message' => 'Quote deleted successfully'], 200);
-	}
-
-	public function store(StoreQuoteRequest $request): JsonResponse
-	{
-		$thumbnailPath = $request->thumbnail->store('quotes', 'public');
-
-		$quote = Quote::create([
-			...$request->validated(),
-			'user_id'    => auth()->id(),
-			'thumbnail'  => '/storage/' . $thumbnailPath,
-		]);
-
-		return response()->json(new QuoteResource($quote), 200);
-	}
-
-	public function index(int $page): JsonResponse
-	{
-		$quotes = Quote::orderByDesc('created_at')->paginate(5, ['*'], 'page', $page);
-		$remainingPages = $quotes->lastPage() - $quotes->currentPage();
-		return response()->json([
-			'data'            => NewsFeedResource::collection($quotes),
-			'remaining_pages' => $remainingPages,
-		], 200);
 	}
 }
