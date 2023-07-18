@@ -9,8 +9,7 @@ use App\Models\Movie;
 use App\Models\Quote;
 use App\Models\Comment;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Artisan;
-use App\Console\Commands\SeedGenresCommand;
+use App\Models\Genre;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,10 +20,7 @@ class DatabaseSeeder extends Seeder
 	{
 		$users = User::factory(3)->create();
 
-		Artisan::call('seed:genres');
-
-		$genres = SeedGenresCommand::$genres;
-
+		Genre::factory()->make();
 		$randomUsers = User::factory(25)->create();
 
 		foreach ($users as $user) {
@@ -37,8 +33,8 @@ class DatabaseSeeder extends Seeder
 				]);
 
 				$quote = $quotes->random();
+				$genre = Genre::inRandomOrder()->first();
 
-				$genre = $genres->random();
 				$movie->genres()->attach($genre->id);
 
 				foreach ($randomUsers as $randomUser) {
