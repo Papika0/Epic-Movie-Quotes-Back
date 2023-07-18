@@ -22,7 +22,7 @@ class EmailVerificationController extends Controller
 					'email'           => $user->temporary_email,
 					'temporary_email' => null,
 				]);
-				return response()->json([], 204);
+				return response()->json(['email' => $user->email], 200);
 			}
 			return response()->json(['message' => 'Email verification failed !', 'email' => $user->getEmailForVerification()], 401);
 		}
