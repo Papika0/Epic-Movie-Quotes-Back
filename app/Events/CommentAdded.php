@@ -12,14 +12,11 @@ class CommentAdded implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
 
-	public $message;
-
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct($message)
+	public function __construct(public object $message)
 	{
-		$this->message = $message;
 	}
 
 	/**

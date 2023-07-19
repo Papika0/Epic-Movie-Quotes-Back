@@ -16,7 +16,8 @@ class LoginRequest extends FormRequest
 		if (filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
 			$rules['email'] = ['required', 'email', 'exists:users,email'];
 		} else {
-			$rules['email'] = ['required', 'exists:users,username'];
+			$this->merge(['username' => $this->email]);
+			$rules['username'] = ['required', 'exists:users,username'];
 		}
 
 		return $rules;

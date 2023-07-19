@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\profile;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\ProfilePictureRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
-class ProfileController extends Controller
+class UserController extends Controller
 {
 	public function updateProfile(ProfileUpdateRequest $request): JsonResponse
 	{
@@ -29,14 +27,13 @@ class ProfileController extends Controller
 		}
 
 		if ($request->has('password')) {
-			$user->password = Hash::make($request->password);
+			$user->password = $request->password;
 		}
 
 		$user->save();
 		return response()->json([
-			'message'  => 'Profile updated successfully',
 			'user'     => $user,
-		]);
+		], 200);
 	}
 
 	public function uploadThumbnail(ProfilePictureRequest $request): JsonResponse
@@ -53,8 +50,7 @@ class ProfileController extends Controller
 		}
 
 		return response()->json([
-			'message' => 'Thumbnail uploaded successfully',
 			'user'    => $user,
-		]);
+		], 201);
 	}
 }

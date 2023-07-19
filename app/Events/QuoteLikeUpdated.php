@@ -8,18 +8,15 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class QuoteLiked implements ShouldBroadcast
+class QuoteLikeUpdated implements ShouldBroadcast
 {
 	use Dispatchable, InteractsWithSockets, SerializesModels;
-
-	public $message;
 
 	/**
 	 * Create a new event instance.
 	 */
-	public function __construct($message)
+	public function __construct(public array $message)
 	{
-		$this->message = $message;
 	}
 
 	/**

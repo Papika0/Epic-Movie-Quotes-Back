@@ -121,16 +121,6 @@ php artisan migrate
 ```
 
 #
-### Seed Genres
-To populate the genres table with predefined genres, you can use the following command in your terminal:
-```sh
-php artisan seed:genres
-```
-This command will execute a database seed operation and insert the predefined genres into the genres table. The genres and their corresponding translations in English and Georgian will be added to the table, allowing you to have a prepopulated collection of genres for your application.
-
-
-
-#
 ### Development
 
 You can run Laravel's built-in development server by executing:

@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\notification;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Notification\NotificationResource;
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
-	public function getNotifications($page): JsonResponse
+	public function index(int $page): JsonResponse
 	{
 		$user = User::findOrFail(auth()->user()->id);
 
@@ -25,14 +24,15 @@ class NotificationController extends Controller
 		return response()->json(
 			['data'                 => NotificationResource::collection($notifications),
 				'pages_left'           => $remainingPages,
-				'unread_notifications' => $unreadNotifications]
+				'unread_notifications' => $unreadNotifications],
+			200
 		);
 	}
 
-	public function markAsRead(Notification $id): JsonResponse
+	public function markAsRead(Notification $notification): JsonResponse
 	{
-		$id->update(['read' => 1]);
-		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($id)]);
+		$notification->update(['read' => 1]);
+		return response()->json(['message' => 'Notification marked as read', 'notification' => new NotificationResource($notification)], 200);
 	}
 
 	public function markAllAsRead(): JsonResponse
@@ -41,6 +41,6 @@ class NotificationController extends Controller
 		$user->notifications->where('read', 0)->each(function ($notification) {
 			$notification->update(['read' => 1]);
 		});
-		return response()->json(['Notifications marked as read']);
+		return response()->json(['Notifications marked as read'], 200);
 	}
 }

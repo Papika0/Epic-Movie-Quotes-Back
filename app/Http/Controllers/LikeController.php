@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\like;
+namespace App\Http\Controllers;
 
 use App\Events\NotificationSend;
-use App\Events\QuoteLiked;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Notification\NotificationResource;
+use App\Events\QuoteLikeUpdated;
+use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
 use App\Models\Quote;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +15,7 @@ class LikeController extends Controller
 	{
 		$quote->likes()->attach(auth()->user()->id);
 
-		event(new QuoteLiked(
+		event(new QuoteLikeUpdated(
 			[
 				'quote_id'    => $quote->id,
 				'likes_count' => $quote->likes()->count(),
@@ -35,14 +34,14 @@ class LikeController extends Controller
 
 		return response()->json([
 			'message'     => 'Quote liked successfully',
-		]);
+		], 200);
 	}
 
 	public function unLike(Quote $quote): JsonResponse
 	{
 		$quote->likes()->detach(auth()->user()->id);
 
-		event(new QuoteLiked(
+		event(new QuoteLikeUpdated(
 			[
 				'quote_id'    => $quote->id,
 				'likes_count' => $quote->likes()->count(),
@@ -53,6 +52,6 @@ class LikeController extends Controller
 
 		return response()->json([
 			'message'     => 'Quote unliked successfully',
-		]);
+		], 200);
 	}
 }

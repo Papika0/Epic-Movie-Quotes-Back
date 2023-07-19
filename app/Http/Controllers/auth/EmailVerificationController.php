@@ -18,10 +18,11 @@ class EmailVerificationController extends Controller
 		if (!hash_equals((string) $user->getKey(), (string) $request->id) ||
 			!hash_equals(sha1($user->getEmailForVerification()), (string) $request->hash)) {
 			if ($user->temporary_email != null && $user->hasVerifiedEmail()) {
-				$user->email = $user->temporary_email;
-				$user->temporary_email = null;
-				$user->save();
-				return response()->json('Email has updated successfully !');
+				$user->update([
+					'email'           => $user->temporary_email,
+					'temporary_email' => null,
+				]);
+				return response()->json(['email' => $user->email], 200);
 			}
 			return response()->json(['message' => 'Email verification failed !', 'email' => $user->getEmailForVerification()], 401);
 		}
@@ -31,7 +32,7 @@ class EmailVerificationController extends Controller
 			event(new Verified($user));
 		}
 
-		return response()->json('Email verified successfully !');
+		return response()->json([], 204);
 	}
 
 	public function resend(ResendEmailRequest $request): JsonResponse
@@ -39,11 +40,11 @@ class EmailVerificationController extends Controller
 		$user = User::where('email', $request->email)->firstOrFail();
 
 		if ($user->hasVerifiedEmail()) {
-			return response()->json('Email already verified!', 200);
+			return response()->json([], 204);
 		}
 
 		$user->sendEmailVerificationNotification();
 
-		return response()->json('Email verification link resent!', 200);
+		return response()->json([], 204);
 	}
 }

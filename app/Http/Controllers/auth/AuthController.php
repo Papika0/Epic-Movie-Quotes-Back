@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use Faker\Factory as Faker;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -18,41 +16,22 @@ class AuthController extends Controller
 	public function register(RegisterRequest $request): JsonResponse
 	{
 		$user = User::create([
-			'username' => $request->username,
-			'email'    => $request->email,
-			'password' => Hash::make($request->password),
-		]);
+			...$request->validated(), ]);
 
 		event(new Registered($user));
 
-		$faker = Faker::create();
-		$firstName = strtoupper(substr($user->username, 0, 1));
-		$thumbnail = $faker->image(public_path('storage/thumbnails'), 180, 180, null, false, false, $firstName);
-		$user->thumbnail = '/storage/thumbnails/' . pathinfo($thumbnail, PATHINFO_BASENAME);
-		$user->save();
-
 		return response()->json([
-			'status'       => true,
 			'email'        => $user->email,
 		], 201);
 	}
 
 	public function login(LoginRequest $request): JsonResponse
 	{
-		$credentials = $request->only(['password']);
-		$username = $request->email;
-
-		if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
-			$credentials['email'] = $username;
-		} else {
-			$credentials['username'] = $username;
-		}
-
-		$user = User::where('email', $username)
-			->orWhere('username', $username)
+		$user = User::where('email', $request->email)
+			->orWhere('username', $request->username)
 			->first();
 
-		if (!Auth::attempt($credentials, $request->has('remember'))) {
+		if (!Auth::attempt($request->validated(), $request->has('remember'))) {
 			return response()->json([
 				'message' => __('auth.failed'),
 			], 401);
@@ -67,17 +46,13 @@ class AuthController extends Controller
 
 		$request->session()->regenerate();
 
-		return response()->json([
-			'status'       => true,
-		], 200);
+		return response()->json([], 204);
 	}
 
-	public function user(): JsonResponse
+	public function authorizedUser(): JsonResponse
 	{
 		return response()->json([
-			'status'             => true,
 			'user'               => Auth::user(),
-			'movies_count' 	     => Auth::user()->movies->count(),
 		], 200);
 	}
 
@@ -85,9 +60,6 @@ class AuthController extends Controller
 	{
 		Auth::guard('web')->logout();
 		Session::flush();
-		return response()->json([
-			'status'  => true,
-			'message' => 'Logout success',
-		]);
+		return response()->json([], 204);
 	}
 }
